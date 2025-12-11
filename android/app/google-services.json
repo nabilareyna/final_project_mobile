@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "348250104822",
+    "project_id": "concertflow-ta",
+    "storage_bucket": "concertflow-ta.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:348250104822:android:35b37a52c5d456d77eddd7",
+        "android_client_info": {
+          "package_name": "com.example.cf_ta"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZym0AEBxGUSaC75Rs2dizYkv8Tl7U0gk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
