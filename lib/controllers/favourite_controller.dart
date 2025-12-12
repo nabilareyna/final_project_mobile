@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get.dart';
 
 class FavoriteController extends GetxController {
-  final _db = FirebaseFirestore.instance;
+  final _db = FirebaseDatabase.instance.ref(); // root reference RTDB
   final _auth = FirebaseAuth.instance;
 
   var favoriteIds = <String>[].obs;
@@ -23,20 +23,39 @@ class FavoriteController extends GetxController {
     if (uid == null) return;
     isLoading.value = true;
 
-    final doc = await _db.collection('users').doc(uid).get();
-    favoriteIds.value = List<String>.from(doc.data()?['favorites'] ?? []);
+    final userRef = _db.child('users').child(uid!).child('favorites');
+    final snapshot = await userRef.get();
+
+    if (snapshot.exists) {
+      // bisa kosong, pastikan cast ke List<String>
+      final List<dynamic> rawList = snapshot.value as List<dynamic>? ?? [];
+      favoriteIds.value = rawList.map((e) => e.toString()).toList();
+    } else {
+      favoriteIds.value = [];
+    }
 
     isLoading.value = false;
   }
 
   Future<void> toggleFavorite(String eventId) async {
-    if (favoriteIds.contains(eventId)) {
-      favoriteIds.remove(eventId);
+    if (uid == null) return;
+
+    final userRef = _db.child('users').child(uid!).child('favorites');
+
+    // ambil list terbaru dari server untuk safety
+    final snapshot = await userRef.get();
+    List<dynamic> currentList = snapshot.exists
+        ? List<dynamic>.from(snapshot.value as List<dynamic>)
+        : [];
+
+    if (currentList.contains(eventId)) {
+      currentList.remove(eventId);
     } else {
-      favoriteIds.add(eventId);
+      currentList.add(eventId);
     }
 
-    await _db.collection('users').doc(uid).update({'favorites': favoriteIds});
+    await userRef.set(currentList); // update list di RTDB
+    favoriteIds.value = currentList.map((e) => e.toString()).toList();
   }
 
   bool isFavorite(String id) {

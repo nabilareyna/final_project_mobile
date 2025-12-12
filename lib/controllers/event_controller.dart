@@ -23,6 +23,12 @@ class EventController extends GetxController {
       final res = await http.get(url);
 
       if (res.statusCode == 200) {
+        if (res.body == "null") {
+        allEvents.value = [];
+        events.value = [];
+        isLoading.value = false;
+        return;
+      }
         final raw = jsonDecode(res.body);
 
         final list =
@@ -35,8 +41,6 @@ class EventController extends GetxController {
 
         allEvents.value = list;
         events.value = list;
-        print("FETCHED EVENTS = ${list.length}");
-        print(list.map((e) => e.title).toList());
       } else {
         Get.snackbar("Error", "Failed to load events (REST error)");
       }

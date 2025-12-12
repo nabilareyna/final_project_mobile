@@ -13,7 +13,6 @@ class HomePage extends StatelessWidget {
   HomePage({super.key});
 
   final eventC = Get.put(EventController());
-  
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +26,10 @@ class HomePage extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
 
+          if (eventC.events.isEmpty) {
+            return Center(child: Text("No events available", style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey)));
+          }
+
           return CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: [
@@ -38,7 +41,6 @@ class HomePage extends StatelessWidget {
                 pinned: true,
                 floating: true,
                 automaticallyImplyLeading: false,
-                
 
                 flexibleSpace: FlexibleSpaceBar(
                   background: ClipRRect(

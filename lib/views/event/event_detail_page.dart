@@ -1,11 +1,12 @@
 import 'dart:ui';
-
 import 'package:cf_ta/controllers/artist_controller.dart';
 import 'package:cf_ta/controllers/order_controller.dart';
 import 'package:cf_ta/models/event_model.dart';
 import 'package:cf_ta/services/currency_format.dart';
 import 'package:cf_ta/theme/app_colors.dart';
 import 'package:cf_ta/views/artist/artist_detail_page.dart';
+import 'package:cf_ta/views/home/home_page.dart';
+import 'package:cf_ta/views/root/root_page.dart';
 import 'package:cf_ta/views/widgets/artist_card.dart';
 import 'package:cf_ta/views/widgets/genre_chip.dart';
 import 'package:cf_ta/views/widgets/info_item.dart';
@@ -51,7 +52,6 @@ class _EventDetailPageState extends State<EventDetailPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // HERO IMAGE
                   SizedBox(height: 330, width: double.infinity, child: buildPoster()),
 
                   Padding(
@@ -181,7 +181,8 @@ class _EventDetailPageState extends State<EventDetailPage> {
                       margin: const EdgeInsets.all(16),
                       borderRadius: 12,
                     );
-                    Get.back();
+                    await Future.delayed(const Duration(milliseconds: 1500));
+                    Get.to(RootPage());
                   } else {
                     Get.snackbar(
                       "Failed",
@@ -216,12 +217,9 @@ class _EventDetailPageState extends State<EventDetailPage> {
   Widget buildPoster() {
     return Stack(
       children: [
-        // === BACKDROP BLUR IMAGE ===
         Positioned.fill(child: Image.network(widget.event.banner, fit: BoxFit.cover, color: Colors.black.withOpacity(0.4), colorBlendMode: BlendMode.darken)),
 
         Positioned.fill(child: BackdropFilter(filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30), child: Container(color: Colors.black.withOpacity(0.2)))),
-
-        // === FOREGROUND HERO IMAGE (FULL POSTER) ===
         Hero(
           tag: 'event-${widget.event.id}',
           child: Center(
@@ -233,7 +231,6 @@ class _EventDetailPageState extends State<EventDetailPage> {
           ),
         ),
 
-        // === GRADIENT FOR READABILITY ===
         Positioned(
           bottom: 0,
           left: 0,
